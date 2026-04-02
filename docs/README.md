@@ -6,7 +6,11 @@
 
 > Brighouse, I. (2024). *RT-MLIDS: A Real-Time Machine Learning Intrusion Detection System using Stacked Ensemble Learning with Adversarial Robustness Evaluation*. University of East London.
 
-📄 **[Read the full paper on ResearchGate](https://www.researchgate.net/)**
+📄 **[Read the full paper on ResearchGate](https://doi.org/10.13140/RG.2.2.16609.47201/1)**
+
+```
+DOI: 10.13140/RG.2.2.16609.47201/1
+```
 
 ---
 

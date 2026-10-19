@@ -1,67 +1,68 @@
+"""Streaming pipeline: record source (Kafka or any iterable) -> preprocessing ->
+ensemble inference -> alerts.
+
+Records are JSON objects. Either ``{"features": {<raw NSL-KDD column>: value, ...}}``
+(preprocessed here with the fitted ``NSLKDDPreprocessor``) is expected.
+``kafka-python`` is imported lazily, so the pipeline can be tested and replayed
+without a broker by passing any iterable of message-like objects as ``consumer``.
 """
-RT-MLIDS Real-Time Streaming Pipeline
-Consumes network flow records from Apache Kafka and runs ensemble inference.
-"""
+
+from __future__ import annotations
 
 import json
 import logging
+import time
+
 import numpy as np
-from kafka import KafkaConsumer
-from src.models.ensemble import StackedEnsemble
+import pandas as pd
+
+from src.data import CLASS_NAMES, NORMAL_INDEX
 from src.pipeline.alert_engine import AlertEngine
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("rt-mlids")
-
-LABEL_MAP = {0: "Normal", 1: "DoS", 2: "Probe", 3: "R2L", 4: "U2R"}
 
 
 class RTMLIDSPipeline:
-    """
-    End-to-end streaming pipeline:
-    Kafka → Feature buffer → Ensemble inference → Alert generation
-    """
-
-    def __init__(
-        self,
-        kafka_broker: str,
-        topic: str,
-        model_path: str = "models/saved/rt_mlids.pkl",
-        confidence_threshold: float = 0.85,
-        buffer_size: int = 512,
-    ):
-        self.topic = topic
+    def __init__(self, model, preprocessor, consumer=None, kafka_broker=None, topic=None,
+                 confidence_threshold: float = 0.85, buffer_size: int = 512):
+        self.model = model
+        self.preprocessor = preprocessor
         self.buffer_size = buffer_size
-        self.model = StackedEnsemble.load(model_path)
         self.alert_engine = AlertEngine(threshold=confidence_threshold)
-        self.consumer = KafkaConsumer(
-            topic,
-            bootstrap_servers=[kafka_broker],
-            value_deserializer=lambda m: json.loads(m.decode("utf-8")),
-            auto_offset_reset="latest",
-            enable_auto_commit=True,
-        )
-        self._buffer: list[np.ndarray] = []
-        logger.info("RT-MLIDS pipeline initialised. Listening on topic: %s", topic)
+        self.threshold = confidence_threshold
+        if consumer is None:
+            from kafka import KafkaConsumer  # lazy: optional dependency
+
+            consumer = KafkaConsumer(
+                topic, bootstrap_servers=[kafka_broker],
+                value_deserializer=lambda m: json.loads(m.decode("utf-8")),
+                auto_offset_reset="latest", enable_auto_commit=True)
+        self.consumer = consumer
+        self._buffer: list[dict] = []
+        self.batch_latencies_ms: list[float] = []
 
     def run(self):
-        """Main loop: consume, buffer, infer, alert."""
+        """Consume until the source is exhausted (a Kafka consumer never is)."""
         for message in self.consumer:
-            flow = np.array(message.value["features"], dtype=np.float32)
-            self._buffer.append(flow)
-
+            self._buffer.append(message.value["features"])
             if len(self._buffer) >= self.buffer_size:
-                X_batch = np.vstack(self._buffer)
-                self._buffer.clear()
-                self._process_batch(X_batch)
+                self.flush()
+        self.flush()
+
+    def flush(self):
+        if not self._buffer:
+            return []
+        rows, self._buffer = self._buffer, []
+        t0 = time.perf_counter()
+        X = self.preprocessor.transform(pd.DataFrame(rows))
+        alerts = self._process_batch(X)
+        self.batch_latencies_ms.append((time.perf_counter() - t0) * 1e3)
+        return alerts
 
     def _process_batch(self, X: np.ndarray):
-        predictions, confidences, confident_mask = (
-            self.model.predict_with_confidence(X)
-        )
-        for i, (pred, conf, is_confident) in enumerate(
-            zip(predictions, confidences, confident_mask)
-        ):
-            label = LABEL_MAP.get(pred, "Unknown")
-            if is_confident and label != "Normal":
-                self.alert_engine.fire(label=label, confidence=conf, flow_idx=i)
+        preds, conf, ok = self.model.predict_with_confidence(X)
+        alerts = []
+        for i, (p, c, confident) in enumerate(zip(preds, conf, ok)):
+            if confident and p != NORMAL_INDEX:
+                alerts.append(self.alert_engine.fire(CLASS_NAMES[int(p)], c, i))
+        return alerts

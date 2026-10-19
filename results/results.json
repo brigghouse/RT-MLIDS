@@ -1,0 +1,506 @@
+{
+  "config": {
+    "data_path": "data/NSL_KDD",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "folds": 3,
+    "svm_n": 30000,
+    "adv_n": 100,
+    "adv_n_ens": 20,
+    "n_jobs": 2,
+    "save_model": "models/saved/rt_mlids.pkl",
+    "no_adv": true,
+    "out": "results/results.json"
+  },
+  "runs": {
+    "0": {
+      "models": {
+        "Random Forest": {
+          "multiclass_weighted": {
+            "accuracy": 0.7408179559971612,
+            "precision": 0.7851879937895246,
+            "recall": 0.7408179559971612,
+            "f1": 0.7023954587147626
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7535486160397445,
+            "precision": 0.9192303260744326,
+            "recall": 0.6216784851554585,
+            "f1": 0.7417255485310524
+          },
+          "latency_us_per_flow": 225.00344228513217
+        },
+        "XGBoost": {
+          "multiclass_weighted": {
+            "accuracy": 0.7714691270404542,
+            "precision": 0.8211405356044281,
+            "recall": 0.7714691270404542,
+            "f1": 0.7372626195837834
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7912970191625266,
+            "precision": 0.9669117647058824,
+            "recall": 0.6558092417984883,
+            "f1": 0.7815387472721363
+          },
+          "latency_us_per_flow": 11.823822656076288
+        },
+        "SVM (30k subsample)": {
+          "multiclass_weighted": {
+            "accuracy": 0.7176632363378282,
+            "precision": 0.7368558084055892,
+            "recall": 0.7176632363378282,
+            "f1": 0.6709531093000739
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7321682044002839,
+            "precision": 0.9148858224447429,
+            "recall": 0.583807371620042,
+            "f1": 0.7127770906669204
+          },
+          "latency_us_per_flow": 144.7896718748787
+        },
+        "Stacked Ensemble": {
+          "multiclass_weighted": {
+            "accuracy": 0.7662792760823279,
+            "precision": 0.8221185652367475,
+            "recall": 0.7662792760823279,
+            "f1": 0.7281837163567759
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7790986515259049,
+            "precision": 0.9668291523005588,
+            "recall": 0.6336787968518662,
+            "f1": 0.7655808698926756
+          },
+          "latency_us_per_flow": 216.9216130858409
+        }
+      },
+      "n_test": 22544,
+      "test_class_counts": {
+        "dos": 7460,
+        "normal": 9711,
+        "probe": 2421,
+        "r2l": 2885,
+        "u2r": 67
+      },
+      "threshold_operating_points": {
+        "0.5": {
+          "coverage": 0.9993789921930447,
+          "accuracy_on_confident": 0.7666222814025744
+        },
+        "0.7": {
+          "coverage": 0.9874467707594038,
+          "accuracy_on_confident": 0.7722474282377252
+        },
+        "0.85": {
+          "coverage": 0.9714336408800568,
+          "accuracy_on_confident": 0.7771689497716895
+        },
+        "0.95": {
+          "coverage": 0.9523598296664301,
+          "accuracy_on_confident": 0.783884489986027
+        }
+      },
+      "shap_top5": [
+        {
+          "feature": "src_bytes",
+          "mean_abs_shap": 1.1989166736602783
+        },
+        {
+          "feature": "dst_host_srv_count",
+          "mean_abs_shap": 0.8850128054618835
+        },
+        {
+          "feature": "count",
+          "mean_abs_shap": 0.7532736659049988
+        },
+        {
+          "feature": "dst_bytes",
+          "mean_abs_shap": 0.7352471351623535
+        },
+        {
+          "feature": "dst_host_same_src_port_rate",
+          "mean_abs_shap": 0.5006710886955261
+        }
+      ],
+      "selected_features": [
+        "src_bytes",
+        "diff_srv_rate",
+        "same_srv_rate",
+        "dst_bytes",
+        "dst_host_diff_srv_rate",
+        "dst_host_srv_count",
+        "count",
+        "dst_host_same_srv_rate",
+        "dst_host_serror_rate",
+        "serror_rate",
+        "flag_SF",
+        "dst_host_srv_serror_rate",
+        "flag_S0",
+        "srv_serror_rate",
+        "logged_in",
+        "dst_host_srv_diff_host_rate",
+        "dst_host_same_src_port_rate",
+        "dst_host_count",
+        "service_http",
+        "srv_count",
+        "srv_diff_host_rate",
+        "service_private",
+        "dst_host_rerror_rate",
+        "dst_host_srv_rerror_rate",
+        "rerror_rate",
+        "service_eco_i",
+        "protocol_type_tcp",
+        "duration",
+        "srv_rerror_rate",
+        "service_domain_u"
+      ],
+      "n_onehot_columns": 122,
+      "seconds": 427.1681261062622
+    },
+    "1": {
+      "models": {
+        "Random Forest": {
+          "multiclass_weighted": {
+            "accuracy": 0.7443665720369056,
+            "precision": 0.7897776955388446,
+            "recall": 0.7443665720369056,
+            "f1": 0.7063903700615467
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7566092973740242,
+            "precision": 0.9251157407407408,
+            "recall": 0.6228473466843295,
+            "f1": 0.7444697992828203
+          },
+          "latency_us_per_flow": 186.04586123087682
+        },
+        "XGBoost": {
+          "multiclass_weighted": {
+            "accuracy": 0.7811834634492548,
+            "precision": 0.8312928138504745,
+            "recall": 0.7811834634492548,
+            "f1": 0.7492936329469977
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7925390347764372,
+            "precision": 0.9672318973418882,
+            "recall": 0.6578352684485311,
+            "f1": 0.7830805621260609
+          },
+          "latency_us_per_flow": 78.9060047853063
+        },
+        "SVM (30k subsample)": {
+          "multiclass_weighted": {
+            "accuracy": 0.7194819020581973,
+            "precision": 0.7308011180266123,
+            "recall": 0.7194819020581973,
+            "f1": 0.6727117639018009
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7331884315117104,
+            "precision": 0.9145184824902723,
+            "recall": 0.5860671705758591,
+            "f1": 0.7143467730445933
+          },
+          "latency_us_per_flow": 150.20794355464773
+        },
+        "Stacked Ensemble": {
+          "multiclass_weighted": {
+            "accuracy": 0.7730216465578424,
+            "precision": 0.8274243754475771,
+            "recall": 0.7730216465578424,
+            "f1": 0.7366708045526174
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7825141944641589,
+            "precision": 0.9671300659754948,
+            "recall": 0.6396789527000701,
+            "f1": 0.7700389287556869
+          },
+          "latency_us_per_flow": 252.76943046863562
+        }
+      },
+      "n_test": 22544,
+      "test_class_counts": {
+        "dos": 7460,
+        "normal": 9711,
+        "probe": 2421,
+        "r2l": 2885,
+        "u2r": 67
+      },
+      "threshold_operating_points": {
+        "0.5": {
+          "coverage": 0.9991128459900639,
+          "accuracy_on_confident": 0.7733528680518558
+        },
+        "0.7": {
+          "coverage": 0.9885113555713272,
+          "accuracy_on_confident": 0.7759479470495849
+        },
+        "0.85": {
+          "coverage": 0.9752040454222853,
+          "accuracy_on_confident": 0.7798044120991585
+        },
+        "0.95": {
+          "coverage": 0.9517831795599716,
+          "accuracy_on_confident": 0.7856643519597334
+        }
+      },
+      "seconds": 1237.2253482341766
+    },
+    "2": {
+      "models": {
+        "Random Forest": {
+          "multiclass_weighted": {
+            "accuracy": 0.7390880056777857,
+            "precision": 0.7854359965731603,
+            "recall": 0.7390880056777857,
+            "f1": 0.700405262690189
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7511089425124201,
+            "precision": 0.9249235114144505,
+            "recall": 0.612483441128341,
+            "f1": 0.7369556045192442
+          },
+          "latency_us_per_flow": 207.60295898440972
+        },
+        "XGBoost": {
+          "multiclass_weighted": {
+            "accuracy": 0.776570262597587,
+            "precision": 0.8260637846285191,
+            "recall": 0.776570262597587,
+            "f1": 0.7438507554303205
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7932931156848829,
+            "precision": 0.9671887504287184,
+            "recall": 0.6592379022831761,
+            "f1": 0.7840593141797961
+          },
+          "latency_us_per_flow": 55.62246054671148
+        },
+        "SVM (30k subsample)": {
+          "multiclass_weighted": {
+            "accuracy": 0.7152235628105039,
+            "precision": 0.7280619078417203,
+            "recall": 0.7152235628105039,
+            "f1": 0.6689380102272658
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7270227111426544,
+            "precision": 0.9136628267063049,
+            "recall": 0.574768175796774,
+            "f1": 0.7056347460059313
+          },
+          "latency_us_per_flow": 151.02029394569172
+        },
+        "Stacked Ensemble": {
+          "multiclass_weighted": {
+            "accuracy": 0.7708037615330021,
+            "precision": 0.8242904510661847,
+            "recall": 0.7708037615330021,
+            "f1": 0.7340893046304642
+          },
+          "binary_attack_vs_normal": {
+            "accuracy": 0.7834013484740951,
+            "precision": 0.9672073342736248,
+            "recall": 0.6412374347385646,
+            "f1": 0.7711916030176655
+          },
+          "latency_us_per_flow": 303.13694560542
+        }
+      },
+      "n_test": 22544,
+      "test_class_counts": {
+        "dos": 7460,
+        "normal": 9711,
+        "probe": 2421,
+        "r2l": 2885,
+        "u2r": 67
+      },
+      "threshold_operating_points": {
+        "0.5": {
+          "coverage": 0.9991572036905607,
+          "accuracy_on_confident": 0.7709655937846837
+        },
+        "0.7": {
+          "coverage": 0.9873136976579134,
+          "accuracy_on_confident": 0.7749573187168658
+        },
+        "0.85": {
+          "coverage": 0.9740951029098651,
+          "accuracy_on_confident": 0.7800546448087432
+        },
+        "0.95": {
+          "coverage": 0.950319375443577,
+          "accuracy_on_confident": 0.7898151605675877
+        }
+      },
+      "seconds": 1361.8490557670593
+    }
+  },
+  "aggregate_mean_std": {
+    "Random Forest": {
+      "multiclass_weighted": {
+        "accuracy": [
+          0.7414241779039509,
+          0.0021971867546345014
+        ],
+        "precision": [
+          0.7868005619671766,
+          0.002107584648017339
+        ],
+        "recall": [
+          0.7414241779039509,
+          0.0021971867546345014
+        ],
+        "f1": [
+          0.7030636971554994,
+          0.0024886789697787983
+        ]
+      },
+      "binary_attack_vs_normal": {
+        "accuracy": [
+          0.7537556186420629,
+          0.0022502760510535545
+        ],
+        "precision": [
+          0.9230898594098745,
+          0.002730230296026673
+        ],
+        "recall": [
+          0.6190030909893763,
+          0.004634719340750674
+        ],
+        "f1": [
+          0.7410503174443722,
+          0.0031045915997173056
+        ]
+      },
+      "latency_us_per_flow": 206.21742083347291
+    },
+    "XGBoost": {
+      "multiclass_weighted": {
+        "accuracy": [
+          0.7764076176957654,
+          0.003967528448871214
+        ],
+        "precision": [
+          0.8261657113611406,
+          0.004145276845632366
+        ],
+        "recall": [
+          0.7764076176957654,
+          0.003967528448871214
+        ],
+        "f1": [
+          0.7434690026537005,
+          0.004919052891448599
+        ]
+      },
+      "binary_attack_vs_normal": {
+        "accuracy": [
+          0.7923763898746156,
+          0.0008229784746910361
+        ],
+        "precision": [
+          0.9671108041588297,
+          0.0001418401492318983
+        ],
+        "recall": [
+          0.6576274708433986,
+          0.0014074357447355715
+        ],
+        "f1": [
+          0.7828928745259978,
+          0.0010375401551780989
+        ]
+      },
+      "latency_us_per_flow": 48.78409599603136
+    },
+    "SVM (30k subsample)": {
+      "multiclass_weighted": {
+        "accuracy": [
+          0.7174562337355098,
+          0.0017446109108024395
+        ],
+        "precision": [
+          0.7319062780913073,
+          0.003674162567465835
+        ],
+        "recall": [
+          0.7174562337355098,
+          0.0017446109108024395
+        ],
+        "f1": [
+          0.6708676278097135,
+          0.0015418137615402475
+        ]
+      },
+      "binary_attack_vs_normal": {
+        "accuracy": [
+          0.7307931156848829,
+          0.002698416652874481
+        ],
+        "precision": [
+          0.9143557105471066,
+          0.00051238050520474
+        ],
+        "recall": [
+          0.5815475726642251,
+          0.004881723687727658
+        ],
+        "f1": [
+          0.7109195365724817,
+          0.0037914583114257126
+        ]
+      },
+      "latency_us_per_flow": 148.67263645840606
+    },
+    "Stacked Ensemble": {
+      "multiclass_weighted": {
+        "accuracy": [
+          0.7700348947243908,
+          0.002805739003579453
+        ],
+        "precision": [
+          0.8246111305835031,
+          0.0021779243961405747
+        ],
+        "recall": [
+          0.7700348947243908,
+          0.002805739003579453
+        ],
+        "f1": [
+          0.7329812751799526,
+          0.0035523197546015544
+        ]
+      },
+      "binary_attack_vs_normal": {
+        "accuracy": [
+          0.7816713981547196,
+          0.0018549087077975722
+        ],
+        "precision": [
+          0.9670555175165595,
+          0.00016314309819961994
+        ],
+        "recall": [
+          0.6381983947635003,
+          0.003258556994357373
+        ],
+        "f1": [
+          0.768937133888676,
+          0.0024194414640151306
+        ]
+      },
+      "latency_us_per_flow": 257.6093297199655
+    }
+  }
+}

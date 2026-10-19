@@ -1,0 +1,17 @@
+{
+  "machine": {
+    "cpus": 2,
+    "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39"
+  },
+  "model_only_us_per_flow": {
+    "Random Forest": 102.27333671881667,
+    "XGBoost": 12.43807773469996,
+    "Stacked Ensemble": 121.43696386761603
+  },
+  "end_to_end_replay": {
+    "flows": 5000,
+    "us_per_flow": 150.18087219978042,
+    "alerts": 1796,
+    "note": "preprocessing + inference + alerting; no Kafka transport, no feature extraction"
+  }
+}

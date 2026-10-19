@@ -1,0 +1,5 @@
+pytest>=7.4.0
+kafka-python>=2.0.2
+matplotlib>=3.7.0
+jupyter>=1.0.0
+ipykernel>=6.25.0

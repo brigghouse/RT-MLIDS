@@ -12,7 +12,7 @@ class MIGFeatureSelector:
     """
     Selects the top-k features using Mutual Information Gain (MIG).
     Model-agnostic and captures non-linear feature-class dependencies.
-    Reducing from 53 to 30 features cuts inference latency ~18%.
+    Used here to reduce the 122 one-hot encoded NSL-KDD columns to 30.
     """
 
     def __init__(self, k: int = 30):
